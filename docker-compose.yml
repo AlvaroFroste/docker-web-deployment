@@ -1,0 +1,76 @@
+# Nombre del proyecto de Docker Compose
+name: docker-web-deployment
+
+services:
+
+  #Servicio de BBDD MariaDB
+  db:
+    # Imagen 
+    image: mariadb:11.4
+
+    # Contenedor siempre activo aunque se reinicie
+    restart: unless-stopped
+
+    # Variables para iniciar (vienen del .env)
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+
+    # Guarda los datos de la BBDD 
+    volumes:
+      - db_data:/var/lib/mysql
+
+    # Limite de memoria
+    mem_limit: 512m
+
+    # Red para Wordpress
+    networks:
+      - wordpress_network
+
+  # Servicio Wordpress
+  wordpress:
+    # Imagen de WordPress + Apache y PHP
+    image: wordpress:6.8-php8.3-apache
+
+    # Contenedor siempre activo aunque se reinicie
+    restart: unless-stopped
+
+    # Config para que Wordpress se conecte con MariaDB
+    environment:
+      WORDPRESS_DB_HOST: db:3306  #Puerto default de MariaDB
+      WORDPRESS_DB_USER: ${MARIADB_USER}  #Usuario de MariaDB
+      WORDPRESS_DB_PASSWORD: ${MARIADB_PASSWORD} #Contraseña de MariaDB
+      WORDPRESS_DB_NAME: ${MARIADB_DATABASE}  #Base de datos de MariaDB
+
+    # Conserva los archivos de WordPress en el directorio default del servici oHTML
+    volumes:
+      - wordpress_data:/var/www/html
+
+    # WordPress en el puerto indicado en .env que es el 80/default de HTML
+    ports:
+      - "${WORDPRESS_PORT}:80"
+
+    # Límite máximo de memoria del contenedor (medio GB/512 MB)
+    mem_limit: 512m
+
+    # Conecta WordPress a la red
+    networks:
+      - wordpress_network
+
+# VOLÚMENES PERSISTENTES
+volumes:
+
+  # Almacena todo de la base de datos
+  db_data:
+
+  # Almacena los archivos de Wordpress
+  wordpress_data:
+
+# Red
+networks:
+
+  # Permite comunicarse entre Wordpress y MariaDB
+  wordpress_network:
+    driver: bridge

@@ -1,0 +1,13 @@
+# No publicar las variables
+.env
+
+# No publicar backups de la BBDD
+backups/*.sql
+
+# Archivos temporales y registros
+*.log
+*.tmp
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
