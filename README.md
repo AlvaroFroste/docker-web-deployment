@@ -1,13 +1,17 @@
+## Estructura del proyecto
+
+```text
 docker-web-deployment/
 │
-├── docker-compose.yml #Config contenedores
-├── .env		#Variables de entorno
-├── .env.example
-├── .gitignore		#Git ignorara
-├── README.md		#Documentación principal (LEEME/README)
+├── docker-compose.yml    # Configuración de los contenedores
+├── .env                  # Variables de entorno privadas
+├── .env.example          # Plantilla de variables de entorno
+├── .gitignore            # Archivos que Git debe ignorar
+├── README.md             # Documentación principal del proyecto
 │
-├── database/	#Bases de datos
-│   └── README.md 	#Información sobre MariaDB
+├── database/
+│   └── README.md         # Información sobre MariaDB
 │
-└── backups/	#Copias de seguridad
-    └── README.md	#Información sobre copias de seguridad
+└── backups/
+    └── README.md         # Información sobre copias de seguridad
+```
